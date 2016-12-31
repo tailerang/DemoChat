@@ -51,7 +51,7 @@
   .run(function ($rootScope, $location, $http) {		
         $rootScope.$on("$routeChangeStart", function (event, next, current) {
             $rootScope.authenticated = false;
-            $http.get('http://11invoicing.com/demochat/control/check_login.php').success(function (results) {
+            $http.get('http://11invoicing.com/demochat/control/log_check.php').success(function (results) {
                 if (results.uid) {
                     $rootScope.authenticated = true;
 					$rootScope.login 	  = results.login;
@@ -116,7 +116,7 @@
 		        push.on('registration', function(data) {
 		            console.log('registration event: ' + data.registrationId);
 		            // alert(data.registrationId);
-                    $http.post("http://11invoicing.com/demochat/control/push_api_reg.php",{'push_token': data.registrationId})
+                    $http.post("http://11invoicing.com/demochat/control/log_push_reg.php",{'push_token': data.registrationId})
                     .success(function(data, status, headers, config){
                         console.log("inserted Successfully");
 						if (data.status == "ok") {
@@ -149,6 +149,7 @@
 		        push.on('notification', function(data) {
 		            console.log('notification event');
 		           // document.getElementById("gcm_msg").value = JSON.stringify(data);
+		           Materialize.toast(data.message, 4000);
 		            navigator.notification.alert(
 		                data.message,         // message
 		                null,                 // callback
@@ -166,121 +167,12 @@
         return $sce.trustAsHtml(val);
     };
   })
-  .controller('productController', function($scope, $http, $routeParams, $timeout) {
-	  //$scope.order_id = $routeParams.orderId;
-	  $http.post("http://11invoicing.com/demochat/control/product.php",{'productid': $routeParams.orderId}).success(function(data, status, headers, config){
-	  	//console.log("inserted Successfully");
-		$scope.images = data;
-	  });		 
-	  /* Start: slideshow*/
-	  $scope.currentIndex=0;
-	  $scope.next=function(){
-	    $scope.currentIndex<$scope.images.length-1?$scope.currentIndex++:$scope.currentIndex=0;
-	  };
-	  $scope.prev=function(){
-		$scope.currentIndex>0?$scope.currentIndex--:$scope.currentIndex=$scope.images.length-1;
-	  };
-	  $scope.$watch('currentIndex',function(){
-		$scope.images.forEach(function(image){
-		  image.visible=false;
-		});
-		$scope.images[$scope.currentIndex].visible=true;
-	  });
-	  /* Start: For Automatic slideshow*/
-	  var timer;
-	  var sliderFunc=function(){
-		timer=$timeout(function(){
-		  $scope.next();
-		  timer=$timeout(sliderFunc,1500);
-		},1500);
-	  };
-	  sliderFunc();
-	  $scope.$on('$destroy',function(){
-		$timeout.cancel(timer);
-	  });
-	  /* End: For Automatic slideshow*/
-	  /* End: slideshow*/
-	  $http.post("control/product_info.php",{'productid': $routeParams.orderId}).success(function(data, status, headers, config){
-	  	//console.log("inserted Successfully");
-		$scope.productDetails = data;
-	  });
-  })
-  .controller('aboutUs', function($scope, $http, $timeout) {
-	  $http.get('http://11invoicing.com/demochat/control/company_info_slide.php').success(function(data) {
-		$scope.images = data;
-	  });
-	  /* Start: slideshow*/
-	  $scope.currentIndex=0;
-	  $scope.next=function(){
-	    $scope.currentIndex<$scope.images.length-1?$scope.currentIndex++:$scope.currentIndex=0;
-	  };
-	  $scope.prev=function(){
-		$scope.currentIndex>0?$scope.currentIndex--:$scope.currentIndex=$scope.images.length-1;
-	  };
-	  $scope.$watch('currentIndex',function(){
-		$scope.images.forEach(function(image){
-		  image.visible=false;
-		});
-		$scope.images[$scope.currentIndex].visible=true;
-	  });
-	  /* Start: For Automatic slideshow*/
-	  var timer;
-	  var sliderFunc=function(){
-		timer=$timeout(function(){
-		  $scope.next();
-		  timer=$timeout(sliderFunc,1500);
-		},1500);
-	  };
-	  sliderFunc();
-	  $scope.$on('$destroy',function(){
-		$timeout.cancel(timer);
-	  });
-	  /* End: For Automatic slideshow*/
-	  /* End: slideshow*/
-	  
-	  $http.get('control/company_info_data.php').success(function(data) {
-		$scope.company_info_data = data;
-	  });
-  })
-  .controller('dash_slide', function ($scope, $http, $timeout){
-	  $http.get('http://11invoicing.com/demochat/control/dash_slide.php').success(function(data) {
-		$scope.images = data;
-	  });
-	  /* Start: slideshow*/
-	  $scope.currentIndex=0;
-	  $scope.next=function(){
-	    $scope.currentIndex<$scope.images.length-1?$scope.currentIndex++:$scope.currentIndex=0;
-	  };
-	  $scope.prev=function(){
-		$scope.currentIndex>0?$scope.currentIndex--:$scope.currentIndex=$scope.images.length-1;
-	  };
-	  $scope.$watch('currentIndex',function(){
-		$scope.images.forEach(function(image){
-		  image.visible=false;
-		});
-		$scope.images[$scope.currentIndex].visible=true;
-	  });
-	  /* Start: For Automatic slideshow*/
-	  var timer;
-	  var sliderFunc=function(){
-		timer=$timeout(function(){
-		  $scope.next();
-		  timer=$timeout(sliderFunc,1500);
-		},1500);
-	  };
-	  sliderFunc();
-	  $scope.$on('$destroy',function(){
-		$timeout.cancel(timer);
-	  });
-	  /* End: For Automatic slideshow*/
-	  /* End: slideshow*/
-  })
   .controller('DashboardController', function ($scope, $http, $routeParams, $location, $route){
 		$scope.MessageSendClick = function(add){
 			var data = {
 				sendmsg:$scope.message.msg
 			}
-			$http.post("http://11invoicing.com/demochat/control/message_sender.php",{'message': $scope.message.msg})
+			$http.post("http://11invoicing.com/demochat/control/msg_push.php",{'message': $scope.message.msg})
 			.success(function(data, status, headers, config){
 				console.log("inserted Successfully");
 				$scope.message.msg = "";
@@ -303,7 +195,7 @@
 				fname:$scope.newLogin.username,
 				lname:$scope.newLogin.password
 			}
-			$http.post("http://11invoicing.com/demochat/control/login.php",{'username': $scope.newLogin.username, 'password': $scope.newLogin.password})
+			$http.post("http://11invoicing.com/demochat/control/log_login.php",{'username': $scope.newLogin.username, 'password': $scope.newLogin.password})
 			.success(function(data, status, headers, config){
 				console.log("inserted Successfully");
 				$scope.newLogin.username = "";
@@ -408,7 +300,7 @@
 			  $rootScope.lname = "";
 			  $rootScope.fname = "";
 			  $rootScope.email = "";
-			  $http.get('http://11invoicing.com/demochat/control/logout.php').success(function(data) {
+			  $http.get('http://11invoicing.com/demochat/control/log_logout.php').success(function(data) {
 				  $location.path('hoame');
   				  $('.button-collapse').sideNav('hide');
 			  });
