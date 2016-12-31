@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/index.js"></script>
   <title>Brilliant</title>  
   <script type="text/javascript">
+
   </script>  
   <script>
   var app = angular
@@ -42,7 +43,7 @@
 				  controller: 'productController'
 			})
 			.when("/signup", {
-				templateUrl : "view/slide.html"
+				templateUrl : "view/register.html?v6"
 			})
 			.otherwise({
 				redirectTo: '/dashboard'
@@ -150,12 +151,14 @@
 		            console.log('notification event');
 		           // document.getElementById("gcm_msg").value = JSON.stringify(data);
 		           Materialize.toast(data.message, 4000);
+		           /*
 		            navigator.notification.alert(
 		                data.message,         // message
 		                null,                 // callback
 		                data.title,           // title
 		                'Ok'                  // buttonName
 		            );
+		            */
 		       });
 		    }
 		};
@@ -189,6 +192,54 @@
 		};     		
 	  
   })
+  .controller('RegisterController',function ($scope, $http, $routeParams, $location, $route){
+	    $('.datepicker').pickadate({
+	      selectMonths: true, // Creates a dropdown to control month
+	      selectYears: 15 // Creates a dropdown of 15 years to control year
+	    });
+	    $(document).ready(function() {
+	      $('select').material_select();
+	    });
+		$scope.RegClick = function(){
+			var data = {
+				username:$scope.reg.username,
+				password:$scope.reg.password,
+				displayname:$scope.reg.displayname,
+				gender:$scope.reg.gender,
+				dob:$scope.reg.dob,
+				email:$scope.reg.email,
+				phone:$scope.reg.phone
+			}
+			$http.post("http://11invoicing.com/demochat/control/log_reg.php",{'username': $scope.reg.username, 'password': $scope.reg.password, 'displayname': $scope.reg.displayname, 'gender': $scope.reg.gender, 'dob': $scope.reg.dob, 'email': $scope.reg.email, 'phone': $scope.reg.phone})
+			.success(function(data, status, headers, config){
+				console.log("inserted Successfully");
+				$scope.reg.username = "";
+				$scope.reg.password = "";
+				$scope.reg.displayname = "";
+				$scope.reg.gender = "";
+				$scope.reg.dob = "";
+				$scope.reg.email = "";
+				$scope.reg.phone = "";
+				if (data.status == "ok") {
+					Materialize.toast(data.message, 4000);
+					$location.path('home');
+				}else{
+					Materialize.toast(data.message, 4000);
+					$location.path('about_us');
+					//$route.reload();
+				}
+			});
+			$scope.reg = {
+				username:"",
+				password:"",
+				displayname:"",
+				gender:"",
+				dob:"",
+				email:"",
+				phone:""
+			};
+		};   
+  })
   .controller('LoginController',function ($scope, $http, $routeParams, $location, $route){
 		$scope.LoginClick = function(add){
 			var data = {
@@ -201,8 +252,10 @@
 				$scope.newLogin.username = "";
 				$scope.newLogin.password = "";
 				if (data.status == "ok") {
+					Materialize.toast(data.message, 4000);
 					$location.path('home');
 				}else{
+					Materialize.toast(data.message, 4000);
 					$location.path('about_us');
 					//$route.reload();
 				}

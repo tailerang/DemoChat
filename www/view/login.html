@@ -3,20 +3,18 @@
 
   <div class="row">
     <form class="col s12">
-      <h4>Sign in</h4>
       <div class="row">
+        <div class="input-field col s12">
+          <span style="font-size: x-large;">Sign in</span>
+        </div>
         <div class="input-field col s12">
           <input id="first_name" type="text" class="validate" ng-model="newLogin.username">
           <label for="user_name">User Name</label>
         </div>
-      </div>
-      <div class="row">
         <div class="input-field col s12">
           <input type="password" class="validate" ng-model="newLogin.password">
           <label for="password">Password</label>
         </div>
-      </div>
-      <div class="row">
         <div class="input-field col s12">
           <button class="btn waves-effect waves-light" data-ng-click="LoginClick()">Login
             <i class="material-icons right">lock_open</i>
