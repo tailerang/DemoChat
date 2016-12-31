@@ -1,0 +1,29 @@
+<div class="aboutus">
+	<div class="slide" ng-repeat="image in images" ng-show="image.visible" style="width:100% !important; margin-bottom:150px !important;">
+		<img ng-src="{{image.src}}" style="width:100% !important"/>
+        <div class="arrows">
+            <a ng-click="prev()"><img src="plugin/slider/img/left-arrow.png"/></a> <a ng-click="next()"><img src="plugin/slider/img/right-arrow.png"/></a>
+        </div>
+        <div ng-controller="mainController">
+        <div ng-controller="aboutUs">
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img}}" ng-if="company_info_data.prod_img" style="width:100% !important"/>
+            
+          <md-content layout="column" flex style="padding: 17px !important;">
+            <p ng-bind-html="company_info_data.prod_name | unsafe"></p>
+            <p ng-bind-html="company_info_data.prod_desc | unsafe"></p>
+            <p ng-bind-html="company_info_data.prod_content | unsafe"></p>
+          </md-content>
+          
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img1}}" ng-if="company_info_data.prod_img1" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img2}}" ng-if="company_info_data.prod_img2" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img3}}" ng-if="company_info_data.prod_img3" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img4}}" ng-if="company_info_data.prod_img4" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img5}}" ng-if="company_info_data.prod_img5" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img6}}" ng-if="company_info_data.prod_img6" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img7}}" ng-if="company_info_data.prod_img7" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img8}}" ng-if="company_info_data.prod_img8" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{company_info_data.prod_img9}}" ng-if="company_info_data.prod_img9" style="width:100% !important"/>
+        </div>
+        </div>
+	</div>
+</div>
