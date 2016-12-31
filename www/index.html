@@ -277,7 +277,26 @@
 	  /* End: For Automatic slideshow*/
 	  /* End: slideshow*/
   })
-  .controller('DashboardController', function ($scope, $http, $timeout){
+  .controller('DashboardController', function ($scope, $http, $routeParams, $location, $route){
+		$scope.MessageSendClick = function(add){
+			var data = {
+				sendmsg:$scope.message.msg
+			}
+			$http.post("http://11invoicing.com/demochat/control/message_sender.php",{'message': $scope.message.msg})
+			.success(function(data, status, headers, config){
+				console.log("inserted Successfully");
+				$scope.message.msg = "";
+				if (data.status == "ok") {
+					//$location.path('home');
+				}else{
+					//$location.path('about_us');
+					//$route.reload();
+				}
+			});
+			$scope.message = {
+				msg:""
+			};
+		};     		
 	  
   })
   .controller('LoginController',function ($scope, $http, $routeParams, $location, $route){

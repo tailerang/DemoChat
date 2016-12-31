@@ -25,10 +25,12 @@
     <div class="row" style="position: fixed; bottom: 17px; left: 0; right: 0;">
       <div class="col s12">
         <div class="input-field col s10">
-          <input placeholder="Message" id="first_name" type="text" class="validate">
+          <input placeholder="Message" type="text" class="validate" ng-model="message.msg">
         </div>
         <div class="input-field col s2">
-          <a class="waves-effect waves-light btn" style="padding:0 1rem !important;"><i class="material-icons">send</i></a>
+          <!--a class="waves-effect waves-light btn" style="padding:0 1rem !important;"><i class="material-icons">send</i></a-->
+          <button class="btn waves-effect waves-light"  style="padding:0 1rem !important;" data-ng-click="MessageSendClick()"><i class="material-icons">send</i>
+          </button>
         </div>
       </div>
     </div>
