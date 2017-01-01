@@ -269,11 +269,60 @@
 				password:""
 			};
 		};   
-		
-	  // Share button
-	  $scope.ShareProduct = function(img, title, hreflink) { 
-	  window.plugins.socialsharing.share('', title, img, hreflink); 
-	  };
+
+	    // Share button
+	    $scope.ShareProduct = function(img, title, hreflink) { 
+	      window.plugins.socialsharing.share('', title, img, hreflink); 
+	    };
+
+		// QR Scanner
+		$scope.QRScan = function(){
+			cordova.plugins.barcodeScanner.scan(function(result) {
+				Materialize.toast(result.text, 4000);
+
+				/*
+				$http.post("control/check_qr_id.php",{'qrcode': result.text})
+				.success(function(data, status, headers, config){
+					console.log("inserted Successfully");
+					if (data.status == "ok") {
+						//$location.path('dashboard');
+					 	//alert(data.qr_id);
+					    $scope.newLogin = {upline: data.qr_id, 
+										   upline_name: data.qr_name,
+										   upline_email: data.qr_email};
+						$http.post("control/check_upline.php",{'upline': data.qr_id})
+						.success(function(data, status, headers, config){
+							console.log("inserted Successfully");
+							if (data.status == "ok") {
+								$scope.uplinedetail = data;
+							}else{
+								$scope.uplinedetail = "";
+							}
+						});
+					}else{
+						//$location.path('login');
+						//$route.reload();
+						alert("扫描出错：没有此用户！");
+						$mdDialog.show(
+						  $mdDialog.alert()
+							.clickOutsideToClose(true)
+							.title('Opening from the left')
+							.textContent('Closing to the right!')
+							.ariaLabel('Left to right demo')
+							.ok('Nice!')
+							// You can specify either sting with query selector
+							.openFrom('#left')
+							// or an element
+							.closeTo(angular.element(document.querySelector('#right')))
+						);
+					  
+					}
+				});*/
+			}, function(error) {
+				alert("扫描出错: " + error);
+			}); 
+		};  
+
   })
   .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
 
