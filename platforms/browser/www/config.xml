@@ -8,7 +8,6 @@
         PhoneGap Team
     </author>
     <content src="index.html" />
-    <gap:plugin name="cordova-plugin-barcodescanner" source="pgb" spec="2.2.0" />
     <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

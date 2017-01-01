@@ -101,6 +101,7 @@
 		    //  Sender ID      : 347107514071
 		    setupPush: function() {
 		        console.log('calling push init');
+    			console.log(navigator.vibrate);
 		        var push = PushNotification.init({
 		            "android": {
 		                "senderID": "347107514071"
@@ -322,6 +323,12 @@
 				alert("扫描出错: " + error);
 			}); 
 		};  
+		// QR Scanner
+		$scope.Vibrate = function(){
+			navigator.vibrate(0);
+		};  
+
+
 
   })
   .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
