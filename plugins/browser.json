@@ -25,6 +25,9 @@
         },
         "cordova-plugin-barcodescanner": {
             "PACKAGE_NAME": "com.wjang.chat"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "com.wjang.chat"
         }
     },
     "dependent_plugins": {}

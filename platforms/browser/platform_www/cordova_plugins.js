@@ -55,6 +55,24 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.barcodeScanner"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-vibration/www/vibration.js",
+        "id": "cordova-plugin-vibration.notification",
+        "pluginId": "cordova-plugin-vibration",
+        "merges": [
+            "navigator.notification",
+            "navigator"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-vibration/src/browser/Vibration.js",
+        "id": "cordova-plugin-vibration.Vibration",
+        "pluginId": "cordova-plugin-vibration",
+        "merges": [
+            "navigator.notification",
+            "navigator"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -65,7 +83,8 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.4",
     "cordova-plugin-dialogs": "1.2.1",
     "cordova-plugin-whitelist": "1.2.2",
-    "cordova-plugin-barcodescanner": "0.7.0"
+    "cordova-plugin-barcodescanner": "0.7.0",
+    "cordova-plugin-vibration": "2.1.3"
 }
 // BOTTOM OF METADATA
 });

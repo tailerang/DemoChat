@@ -1,0 +1,59 @@
+<div ng-controller="productController">
+	<div class="slide" ng-repeat="image in images" ng-show="image.visible" style="width:100% !important; margin-bottom:150px !important;">
+		<img ng-src="{{image.src}}" style="width:100% !important"/>
+        <div class="arrows">
+            <a ng-click="prev()"><img src="plugin/slider/img/left-arrow.png"/></a> <a ng-click="next()"><img src="plugin/slider/img/right-arrow.png"/></a>
+        </div>
+        <div ng-controller="mainController">          
+          <md-content layout="column" flex style="padding: 17px !important;">
+			<strong>{{productDetails.prod_name}}</strong><br /><br />
+            <p ng-bind-html="productDetails.prod_desc | unsafe"></p><br /><br />
+            <p ng-bind-html="productDetails.prod_content | unsafe"></p>
+          </md-content>
+          
+			<img ng-src="../admin/image/product/{{productDetails.prod_img1}}" ng-if="productDetails.prod_img1" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img2}}" ng-if="productDetails.prod_img2" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img3}}" ng-if="productDetails.prod_img3" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img4}}" ng-if="productDetails.prod_img4" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img5}}" ng-if="productDetails.prod_img5" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img6}}" ng-if="productDetails.prod_img6" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img7}}" ng-if="productDetails.prod_img7" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img8}}" ng-if="productDetails.prod_img8" style="width:100% !important"/>
+			<img ng-src="../admin/image/product/{{productDetails.prod_img9}}" ng-if="productDetails.prod_img9" style="width:100% !important"/>
+        </div>
+	</div>
+</div>
+<div ng-controller="productController" style="background-color:#FFFFFF; position:fixed; bottom:0px; height:110px; width:100%;" >
+<div style="border: 0; border-top: 1px solid #797979;"></div>
+    <table style="margin: 3px;" width="100%" >
+      <tr>
+        <td align="left" colspan="2">
+            <table>
+              <tr>
+                <td valign="top"><span style="font-size:140%;">Promotion Price</span></td>
+                <td valign="top">$</td>
+                <td valign="top"><span style="font-size:220%; color:#00FF00;">{{productDetails.prod_promo_price}}</span></td>
+              </tr>
+            </table>
+        </td>
+        <td valign="top" align="right" width="30%">{{productDetails.menu_id}} &nbsp;&nbsp;</td>
+      </tr>
+      <tr>
+        <td valign="top">
+            <table>
+              <tr>
+                <td valign="top"><span style="font-size:120%;">Price</span></td>
+                <td valign="top">$</td>
+                <td valign="top"><span style="font-size:170%; color:#FF0000;text-decoration: line-through;">{{productDetails.prod_price}}</span></td>
+              </tr>
+            </table>
+        </td>
+        <td valign="top" align="right">
+           <md-button class="md-raised" data-ng-click="LoginClaaick()" name="add"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</md-button>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+    
+</div>
+
