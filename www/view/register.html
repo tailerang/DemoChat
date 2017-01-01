@@ -21,8 +21,8 @@
         </div>
         <div class="input-field col s12">
           <select ng-model="reg.gender">
-            <option value="m">Gent</option>
-            <option value="f">Ladies</option>
+            <option ng-value="m">Gent</option>
+            <option ng-value="f">Ladies</option>
           </select>
           <label for="password">Gender</label>
         </div>
@@ -41,6 +41,9 @@
         <div class="input-field col s12">
           <button class="btn waves-effect waves-light" data-ng-click="RegClick()">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+          </button>
+          <button class="btn waves-effect waves-light" data-ng-click="ViewRegClick()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> View
           </button>
         </div>
       </div>
