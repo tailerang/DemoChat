@@ -1,0 +1,33 @@
+
+<div style="width:100%" ng-controller="ProductListCtrl">
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <span style="font-size: x-large;">Product</span>
+        </div>
+        <div class="col s6" ng-repeat="data_prodlist in prodlist.data">
+          <div class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="http://www.um.es/docencia/barzana/materializecss/images/sample-1.jpg">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator grey-text text-darken-4">{{data_prodlist.prod_name}}<i class="material-icons right">more_vert</i></span>
+            </div>
+            <div class="card-reveal">
+              <span class="card-title grey-text text-darken-4">{{data_prodlist.prod_name}}<i class="material-icons right">close</i></span>
+              <p ng-if="data_prodlist.prod_desc">{{data_prodlist.prod_desc}}</p>
+              <p ng-if="data_prodlist.prod_content">{{data_prodlist.prod_content}}</p>
+              <button class="btn waves-effect waves-light" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        <a class="btn-floating btn-large waves-effect waves-light red" style="position: fixed; right: 15px; bottom: 63px;" ng-click="goToSite('prod', $event)"><i class="material-icons">add</i></a>
+      </div>
+    </form>
+  </div>
+</div> <!-- /container -->
+<div style="width:100%" ng-controller="InputController">
+</div>

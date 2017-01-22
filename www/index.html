@@ -39,9 +39,15 @@
       .when("/shop", {
         templateUrl : "view/shop.html"
       })
-      .when('/product/:orderId', {
-          templateUrl: 'view/product.html',
-          controller: 'productController'
+      .when("/prod_list", {
+        templateUrl : "view/prod_list.html"
+      })
+      .when("/prod", {
+        templateUrl : "view/prod.html"
+      })
+      .when('/prod/:orderId', {
+          templateUrl: 'view/prod.html',
+          controller: 'ProductCtrl'
       })
       .when("/signup", {
         templateUrl : "view/register.html?v7"
@@ -56,19 +62,18 @@
             $http.get('http://11invoicing.com/demochat/control/log_check.php').success(function (results) {
                 if (results.uid) {
                   $rootScope.authenticated = true;
-            $rootScope.login    = results.login;
-            $rootScope.uid      = results.uid;
-            $rootScope.name     = results.name;
-            $rootScope.email    = results.email;
-            $rootScope.level    = results.level;
-            $rootScope.push_token = results.push_token;
+		            $rootScope.login    = results.login;
+		            $rootScope.uid      = results.uid;
+		            $rootScope.name     = results.name;
+		            $rootScope.email    = results.email;
+		            $rootScope.level    = results.level;
+		            $rootScope.push_token = results.push_token;
                 } else {
                   var nextUrl = next.$$route.originalPath;
                   if (nextUrl == '/signup' || 
-               nextUrl == '/login' || 
-               nextUrl == '/dashboard' || 
-               nextUrl == '/product/:orderId' || 
-               nextUrl == '/about_us') {
+		               nextUrl == '/login' || 
+		               nextUrl == '/dashboard' || 
+		               nextUrl == '/about_us') {
                   } else {
                       $location.path("/login");
                   }
@@ -177,9 +182,10 @@
         selectMonths: true, // Creates a dropdown to control month
         selectYears: 30 // Creates a dropdown of 15 years to control year
     });
+    $('.materialboxed').materialbox();
   })
    //##########################################################################//
-   //###############          Start MainControl             ##########//
+   //###############          Start MainControl        			      ##########//
    //##########################################################################//
   .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
     $scope.model = {
@@ -197,6 +203,14 @@
           "name": "Check Login",
           "route": "home",
           "icon": "home",
+         },{
+          "name": "Product",
+          "route": "prod_list",
+          "icon": "Product",
+         },{
+          "name": "Shop",
+          "route": "shop",
+          "icon": "Shop",
          },{
           "name": "Log Out",
           "route": "logout",
@@ -293,20 +307,16 @@
     };  
     // QR Scanner
     $scope.Vibrate = function(){
-
       //navigator.vibrate(0);
         Materialize.toast("Vibrate Click", 4000);
     }; 
   }])
    //##########################################################################//
-   //###############          End MainControl             ##########//
+   //###############          End MainControl      			         ##########//
    //##########################################################################//
-   //###############          Start register                ##########//
+   //###############          Start register          		         ##########//
    //##########################################################################//
-  .controller("RegisterCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
-    $scope.ViewRegClick = function(){
-      alert($scope.reg.dob);
-    };  
+  .controller("RegisterCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){ 
     $scope.RegClick = function(){
       var data = {
         username:$scope.reg.username,
@@ -332,8 +342,8 @@
           $location.path('home');
         }else{
           Materialize.toast(data.message, 4000);
-          $location.path('about_us');
-          //$route.reload();
+          // $location.path('about_us');
+          $route.reload();
         }
       });
       $scope.reg = {
@@ -348,9 +358,9 @@
     }; 
   }])
    //##########################################################################//
-   //###############          End register                ##########//
+   //###############          End register                				##########//
    //##########################################################################//
-   //###############          Start Login                 ##########//
+   //###############          Start Login                 				##########//
    //##########################################################################//
   .controller("LoginCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
     $scope.LoginClick = function(add){
@@ -379,9 +389,9 @@
     };  
   }])
    //##########################################################################//
-   //###############          End Login                 ##########//
+   //###############          End Login                					##########//
    //##########################################################################//
-   //###############          Start Dashboard             ##########//
+   //###############          Start Dashboard             				##########//
    //##########################################################################//
   .controller("DashboardCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
     $scope.MessageSendClick = function(add){
@@ -403,9 +413,253 @@
         msg:""
       };
     };  
+  }])
+   //##########################################################################//
+   //###############          End Dashboard                 			##########//
+   //##########################################################################//
+   //###############          Start Shop                					##########//
+   //##########################################################################//
+  .controller("ShopCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+	   $scope.shopgroup = 'detail';
+		$scope.ShopTab = function(add){
+			$scope.shopgroup = add;
+		}
+	   $http.get('http://11invoicing.com/demochat/control/shop_shop_detail.php').success(function (results) {
+	       if (results.shop_id) {
+		      $scope.shop = {
+				  shop_name:results.shop_name,
+				  shop_reg_no:results.shop_reg_no,
+				  shop_gst_no:results.shop_gst_no,
+				  shop_desc:results.shop_desc,
+				  shop_tel:results.shop_tel,
+				  shop_mobile:results.shop_mobile,
+				  shop_website:results.shop_website,
+				  shop_email:results.shop_email,
+				  shop_address:results.shop_address,
+				  shop_postcode:results.shop_postcode,
+				  shop_city:results.shop_city,
+				  shop_state:results.shop_state,
+				  shop_country:results.shop_country,
+				  shop_id:results.shop_id
+		      };
+	       } else {
+		      $scope.shop = {
+				  shop_name:"",
+				  shop_reg_no:"",
+				  shop_gst_no:"",
+				  shop_desc:"",
+				  shop_tel:"",
+				  shop_mobile:"",
+				  shop_website:"",
+				  shop_email:"",
+				  shop_address:"",
+				  shop_postcode:"",
+				  shop_city:"",
+				  shop_state:"",
+				  shop_country:"Malaysia",
+				  shop_id:""
+		      };
+	       }
+	   });
+	   $http.get('http://11invoicing.com/demochat/control/shop_shop_detail.php').success(function (results) {
+   			Materialize.updateTextFields();
+	   });
+    $scope.SaveShopClick = function(){
+      var data = {
+			shop_name:$scope.shop.shop_name,
+			shop_reg_no:$scope.shop.shop_reg_no,
+			shop_gst_no:$scope.shop.shop_gst_no,
+			shop_desc:$scope.shop.shop_desc,
+			shop_tel:$scope.shop.shop_tel,
+			shop_mobile:$scope.shop.shop_mobile,
+			shop_website:$scope.shop.shop_website,
+			shop_email:$scope.shop.shop_email,
+			shop_address:$scope.shop.shop_address,
+			shop_postcode:$scope.shop.shop_postcode,
+			shop_city:$scope.shop.shop_city,
+			shop_state:$scope.shop.shop_state,
+			shop_country:$scope.shop.shop_country,
+			shop_id:$scope.shop.shop_id
+      }
+      $http.post("http://11invoicing.com/demochat/control/shop_shop.php",{'shop_name' : $scope.shop.shop_name, 'shop_reg_no' : $scope.shop.shop_reg_no, 'shop_gst_no' : $scope.shop.shop_gst_no, 'shop_desc' : $scope.shop.shop_desc, 'shop_tel' : $scope.shop.shop_tel, 'shop_mobile' : $scope.shop.shop_mobile, 'shop_website' : $scope.shop.shop_website, 'shop_email' : $scope.shop.shop_email, 'shop_address' : $scope.shop.shop_address, 'shop_postcode' : $scope.shop.shop_postcode, 'shop_city' : $scope.shop.shop_city, 'shop_state' : $scope.shop.shop_state, 'shop_country' : $scope.shop.shop_country, 'shop_id' : $scope.shop.shop_id})
+      .success(function(data, status, headers, config){
+        console.log("inserted Successfully");
+			$scope.shop.shop_name = "";
+			$scope.shop.shop_reg_no = "";
+			$scope.shop.shop_gst_no = "";
+			$scope.shop.shop_desc = "";
+			$scope.shop.shop_tel = "";
+			$scope.shop.shop_mobile = "";
+			$scope.shop.shop_website = "";
+			$scope.shop.shop_email = "";
+			$scope.shop.shop_address = "";
+			$scope.shop.shop_postcode = "";
+			$scope.shop.shop_city = "";
+			$scope.shop.shop_state = "";
+			$scope.shop.shop_country = "";
+			$scope.shop.shop_id = "";
+        if (data.status == "ok") {
+          Materialize.toast(data.message, 4000);
+          $location.path('dashboard');
+        }else{
+          Materialize.toast(data.message, 4000);
+          // $location.path('about_us');
+          $route.reload();
+        }
+      });
+      $scope.shop = {
+		  shop_name:"",
+		  shop_reg_no:"",
+		  shop_gst_no:"",
+		  shop_desc:"",
+		  shop_tel:"",
+		  shop_mobile:"",
+		  shop_website:"",
+		  shop_email:"",
+		  shop_address:"",
+		  shop_postcode:"",
+		  shop_city:"",
+		  shop_state:"",
+		  shop_country:"",
+		  shop_id:""
+      };
+    }; 
+  }])
+   //##########################################################################//
+   //###############          End Shop                          ##########//
+   //##########################################################################//
+   //###############          Start Product                     ##########//
+   //##########################################################################//
+  .controller("ProductCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+     $scope.prodgroup = 'detail';
+    $scope.ProdTab = function(add){
+      $scope.prodgroup = add;
+    }
+    $http.post("http://11invoicing.com/demochat/control/shop_prod_detail.php",{'prod_id': $routeParams.orderId}).success(function(data, status, headers, config){
+         if (data.prod_id) {
+          $scope.prod = {
+          prod_name:data.prod_name,
+          prod_desc:data.prod_desc,
+          prod_content:data.prod_content,
+          prod_img:data.prod_img,
+          prod_img1:data.prod_img1,
+          prod_img2:data.prod_img2,
+          prod_img3:data.prod_img3,
+          prod_img4:data.prod_img4,
+          prod_img5:data.prod_img5,
+          prod_old_price:data.prod_old_price,
+          prod_price:data.prod_price,
+          prod_ads:data.prod_ads,
+          prod_publish:data.prod_publish,
+          prod_status:data.prod_status,
+          prod_id:data.prod_id
+          };
+         } else {
+          $scope.prod = {
+          prod_name:"",
+          prod_desc:"",
+          prod_content:"",
+          prod_img:"",
+          prod_img1:"",
+          prod_img2:"",
+          prod_img3:"",
+          prod_img4:"",
+          prod_img5:"",
+          prod_old_price:"",
+          prod_price:"",
+          prod_ads:"",
+          prod_publish:"",
+          prod_status:"",
+          prod_id:""
+          };
+         }
+     });
+     $http.get('http://11invoicing.com/demochat/control/shop_prod_detail.php').success(function (results) {
+        Materialize.updateTextFields();
+     });
+    $scope.SaveProdClick = function(){
+      var data = {
+      prod_name:$scope.prod.prod_name,
+      prod_desc:$scope.prod.prod_desc,
+      prod_content:$scope.prod.prod_content,
+      prod_img:$scope.prod.prod_img,
+      prod_img1:$scope.prod.prod_img1,
+      prod_img2:$scope.prod.prod_img2,
+      prod_img3:$scope.prod.prod_img3,
+      prod_img4:$scope.prod.prod_img4,
+      prod_img5:$scope.prod.prod_img5,
+      prod_old_price:$scope.prod.prod_old_price,
+      prod_price:$scope.prod.prod_price,
+      prod_ads:$scope.prod.prod_ads,
+      prod_publish:$scope.prod.prod_publish,
+      prod_status:$scope.prod.prod_status,
+      prod_id:$scope.prod.prod_id
+      }
+      $http.post("http://11invoicing.com/demochat/control/shop_prod.php",{'prod_name' : $scope.prod.prod_name, 'prod_desc' : $scope.prod.prod_desc, 'prod_content' : $scope.prod.prod_content, 'prod_img' : $scope.prod.prod_img, 'prod_img1' : $scope.prod.prod_img1, 'prod_img2' : $scope.prod.prod_img2, 'prod_img3' : $scope.prod.prod_img3, 'prod_img4' : $scope.prod.prod_img4, 'prod_img5' : $scope.prod.prod_img5, 'prod_old_price' : $scope.prod.prod_old_price, 'prod_price' : $scope.prod.prod_price, 'prod_ads' : $scope.prod.prod_ads, 'prod_publish' : $scope.prod.prod_publish, 'prod_status' : $scope.prod.prod_status, 'prod_id' : $scope.prod.prod_id})
+      .success(function(data, status, headers, config){
+        console.log("inserted Successfully");
+      $scope.prod.prod_name = "";
+      $scope.prod.prod_desc = "";
+      $scope.prod.prod_content = "";
+      $scope.prod.prod_img = "";
+      $scope.prod.prod_img1 = "";
+      $scope.prod.prod_img2 = "";
+      $scope.prod.prod_img3 = "";
+      $scope.prod.prod_img4 = "";
+      $scope.prod.prod_img5 = "";
+      $scope.prod.prod_old_price = "";
+      $scope.prod.prod_price = "";
+      $scope.prod.prod_ads = "";
+      $scope.prod.prod_publish = "";
+      $scope.prod.prod_status = "";
+      $scope.prod.prod_id = "";
+        if (data.status == "ok") {
+          Materialize.toast(data.message, 4000);
+          $route.reload();
+          // $location.path('dashboard');
+        }else{
+          Materialize.toast(data.message, 4000);
+          // $location.path('about_us');
+          $route.reload();
+        }
+      });
+      $scope.prod = {
+      prod_name:"",
+      prod_desc:"",
+      prod_content:"",
+      prod_img:"",
+      prod_img1:"",
+      prod_img2:"",
+      prod_img3:"",
+      prod_img4:"",
+      prod_img5:"",
+      prod_old_price:"",
+      prod_price:"",
+      prod_ads:"",
+      prod_publish:"",
+      prod_status:"",
+      prod_id:""
+      };
+    }; 
+  }])
+   //##########################################################################//
+   //###############          End Product                            ##########//
+   //##########################################################################//
+   //###############          Start Product List                     ##########//
+   //##########################################################################//
+  .controller("ProductListCtrl", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+     $http.get('http://11invoicing.com/demochat/control/shop_prod_list.php').success(function(data) {
+        if (data.status == "ok") {
+          $scope.prodlist = data;
+        }else{
+          Materialize.toast(data.message, 4000);
+          // $location.path('about_us');
+          // $route.reload();
+        }
+     });
   }]);
    //##########################################################################//
-   //###############          End Login                 ##########//
+   //###############          End Product List                       ##########//
    //##########################################################################//
   </script>
 

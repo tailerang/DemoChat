@@ -1,0 +1,115 @@
+
+<div style="width:100%" ng-controller="ProductCtrl">
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <span style="font-size: x-large;">Product</span>
+        </div>
+        <div class="col s12">
+            <ul tabs  reload="allTabContentLoaded">
+                <li class="tab col s4"><a ng-click="ProdTab('detail')"  style="color: rgba(238,110,115,0.7);">
+                  <center ng-if="prodgroup != 'detail'">Detail</center>
+                  <center ng-if="prodgroup == 'detail'"><strong>Detail</strong></center>
+                  </a>
+                  <div ng-if="prodgroup == 'detail'" style="bottom: 0;height: 2px;background-color: #f6b2b5;will-change: left, right;"></div>
+                </li>
+                <li class="tab col s4"><a ng-click="ProdTab('desc')" style="color: rgba(238,110,115,0.7);">
+                  <center ng-if="prodgroup != 'desc'">Description</center>
+                  <center ng-if="prodgroup == 'desc'"><strong>Description</strong></center>
+                  </a>
+                  <div ng-if="prodgroup == 'desc'" style="bottom: 0;height: 2px;background-color: #f6b2b5;will-change: left, right;"></div>
+                </li>
+                <li class="tab col s4"><a ng-click="ProdTab('image')" style="color: rgba(238,110,115,0.7);">
+                  <center ng-if="prodgroup != 'image'">Image</center>
+                  <center ng-if="prodgroup == 'image'"><strong>Image</strong></center>
+                  </a>
+                  <div ng-if="prodgroup == 'image'" style="bottom: 0;height: 2px;background-color: #f6b2b5;will-change: left, right;"></div>
+                </li>
+            </ul>
+            <br><br>
+        </div>
+        <div ng-show="prodgroup == 'detail'" >
+          <div class="input-field col s12">
+            <input id="prod_name" type="text" class="validate" ng-model="prod.prod_name">
+            <label for="prod_name">Product Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_old_price" type="text" class="validate" ng-model="prod.prod_old_price">
+            <label for="prod_old_price">Product Original Price</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_price" type="text" class="validate" ng-model="prod.prod_price">
+            <label for="prod_price">Product Price</label>
+          </div>
+          <div class="input-field col s12">
+            <div class="switch">
+              <label>
+                Close advertisement
+                <input type="checkbox" ng-model="prod.prod_ads" ng-checked="prod.prod_ads == '1'" ng-true-value="'1'" ng-false-value="'0'">
+                <span class="lever"></span>
+                Advertisement
+              </label>
+            </div>
+            <br><br>
+          </div>
+          <div class="input-field col s12">
+            <div class="switch">
+              <label>
+                Unpublish
+                <input type="checkbox" ng-model="prod.prod_publish" ng-checked="prod.prod_publish == '1'" ng-true-value="'1'" ng-false-value="'0'">
+                <span class="lever"></span>
+                Publish
+              </label>
+            </div>
+            <br><br>
+          </div>
+        </div>
+        <div ng-show="prodgroup == 'desc'" >
+          <div class="input-field col s12">
+            <textarea class="materialize-textarea" ng-model="prod.prod_desc"></textarea>
+            <label for="prod_desc">Product Description</label>
+          </div>
+          <div class="input-field col s12">
+            <textarea class="materialize-textarea" ng-model="prod.prod_content"></textarea>
+            <label for="prod_content">Product Content</label>
+          </div>
+        </div>
+        <div ng-show="prodgroup == 'image'" >
+          <div class="input-field col s12">
+            <input id="prod_img" type="text" class="validate" ng-model="prod.prod_img">
+            <label for="prod_img">Product Image 1</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_img1" type="text" class="validate" ng-model="prod.prod_img1">
+            <label for="prod_img1">Product Image 2</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_img2" type="text" class="validate" ng-model="prod.prod_img2">
+            <label for="prod_img2">Product Image 3</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_img3" type="text" class="validate" ng-model="prod.prod_img3">
+            <label for="prod_img3">Product Image 4</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_img4" type="text" class="validate" ng-model="prod.prod_img4">
+            <label for="prod_img4">Product Image 5</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="prod_img5" type="text" class="validate" ng-model="prod.prod_img5">
+            <label for="prod_img5">Product Image 6</label>
+          </div>
+        </div>
+        <div class="input-field col s12">
+          <input type="hidden" ng-model="prod.prod_id">
+          <button class="btn waves-effect waves-light" data-ng-click="SaveProdClick()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> <!-- /container -->
+<div style="width:100%" ng-controller="InputController">
+</div>
