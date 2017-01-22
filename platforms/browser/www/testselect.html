@@ -1,46 +1,446 @@
-<!DOCTYPE html>
-<html ng-app>
-
+<html lang="en">
 <head>
-  <title>Select</title>
-  <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-  <!--Let browser know website is optimized for mobile-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-
-<body class="row">
-
-  <!-- your code start -->
-  <div class="input-field col s6">
-    <select ng-model="getValue">
-      <option value="" disabled selected>Choose your option</option>
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-      <option value="3">Option 3</option>
-    </select>
-    <label>Materialize Select</label>
-  </div>
-  <!-- your code end -->
-  
-  <!--Display result-->
-  <h5 class="col s12">You select : {{getValue}}</h5>
-
-  <!--Import jQuery before materialize.js-->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-
-  <!--Materializecss Select-->
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/index.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet"/>
+  <link href="fonts/MaterialIcons.css" type="text/css" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/angular_slide.css">
+  <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script type="text/javascript" src="js/angular.min.js"></script>
+  <script type="text/javascript" src="js/angular-route.min.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/socialsharing.js"></script>
+  <title>Demo Chat</title>   
   <script>
-    $(document).ready(function() {
-      $('select').material_select();
+  var app = angular
+  .module("MyApp", ["ngRoute"])
+  .config( function($routeProvider, $locationProvider) {
+    $routeProvider
+      .when("/dashboard", {
+        templateUrl : "view/dashboard.html"
+      })
+      .when("/about_us", {
+        templateUrl : "view/about_us.html"
+      })
+      .when("/login", {
+        templateUrl : "view/login.html"
+      })
+      .when("/home", {
+        templateUrl : "view/home.html"
+      })
+      .when("/shop", {
+        templateUrl : "view/shop.html"
+      })
+      .when('/product/:orderId', {
+          templateUrl: 'view/product.html',
+          controller: 'productController'
+      })
+      .when("/signup", {
+        templateUrl : "view/register.html?v7"
+      })
+      .otherwise({
+        redirectTo: '/dashboard'
+      });
+  })
+  .run(function ($rootScope, $location, $http) {    
+        $rootScope.$on("$routeChangeStart", function (event, next, current) {
+            $rootScope.authenticated = false;
+            $http.get('http://11invoicing.com/demochat/control/log_check.php').success(function (results) {
+                if (results.uid) {
+                  $rootScope.authenticated = true;
+            $rootScope.login    = results.login;
+            $rootScope.uid      = results.uid;
+            $rootScope.name     = results.name;
+            $rootScope.email    = results.email;
+            $rootScope.level    = results.level;
+            $rootScope.push_token = results.push_token;
+                } else {
+                  var nextUrl = next.$$route.originalPath;
+                  if (nextUrl == '/signup' || 
+               nextUrl == '/login' || 
+               nextUrl == '/dashboard' || 
+               nextUrl == '/product/:orderId' || 
+               nextUrl == '/about_us') {
+                  } else {
+                      $location.path("/login");
+                  }
+                }
+            });
+        });
+       
+    var phoneapp = {
+        // Application Constructor
+        initialize: function() {
+            this.bindEvents();
+        },
+        // Bind Event Listeners
+        //
+        // Bind any events that are required on startup. Common events are:
+        // 'load', 'deviceready', 'offline', and 'online'.
+        bindEvents: function() {
+            document.addEventListener('deviceready', this.onDeviceReady, false);
+        },
+        // deviceready Event Handler
+        //
+        // The scope of 'this' is the event. In order to call the 'receivedEvent'
+        // function, we must explicitly call 'phoneapp.receivedEvent(...);'
+        onDeviceReady: function() {
+            console.log('Received Device Ready Event');
+            console.log('calling setup push');
+            phoneapp.setupPush();
+        },
+        //  Server API Key : AIzaSyAQQXWPh1HC4sILQjYimwHGyFZ65RuzktI
+        //  Sender ID      : 347107514071
+        setupPush: function() {
+            console.log('calling push init');
+            var push = PushNotification.init({
+                "android": {
+                    "senderID": "347107514071"
+                },
+                "browser": {},
+                "ios": {
+                    "sound": true,
+                    "vibration": true,
+                    "badge": true
+                },
+                "windows": {}
+            });
+            console.log('after init');
+
+            push.on('registration', function(data) {
+                console.log('registration event: ' + data.registrationId);
+                // alert(data.registrationId);
+                    $http.post("http://11invoicing.com/demochat/control/log_push_reg.php",{'push_token': data.registrationId})
+                    .success(function(data, status, headers, config){
+                        console.log("inserted Successfully");
+            if (data.status == "ok") {
+              //alert("ok");
+            }else{
+              //alert("nook");
+              $route.reload();
+            }
+                    });
+
+                var oldRegId = localStorage.getItem('registrationId');
+                if (oldRegId !== data.registrationId) {
+                    // Save new registration ID
+                    localStorage.setItem('registrationId', data.registrationId);
+                    // Post registrationId to your app server as the value has changed
+                }
+
+                var parentElement = document.getElementById('registration');
+                var listeningElement = parentElement.querySelector('.waiting');
+                var receivedElement = parentElement.querySelector('.received');
+
+                listeningElement.setAttribute('style', 'display:none;');
+                receivedElement.setAttribute('style', 'display:block;');
+            });
+
+            push.on('error', function(e) {
+                console.log("push error = " + e.message);
+            });
+
+            push.on('notification', function(data) {
+                console.log('notification event');
+                // document.getElementById("gcm_msg").value = JSON.stringify(data);
+                Materialize.toast(data.message, 4000);
+               /*
+                navigator.notification.alert(
+                    data.message,         // message
+                    null,                 // callback
+                    data.title,           // title
+                    'Ok'                  // buttonName
+                );
+                */
+           });
+        }
+    };
+    phoneapp.initialize();
+     
+  })
+  .filter('unsafe', function($sce) {
+    return function(val) {
+        return $sce.trustAsHtml(val);
+    };
+  })
+  .controller('InputController', function (){
+    $('select').material_select();
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 30 // Creates a dropdown of 15 years to control year
     });
+  })
+   //##########################################################################//
+   //###############          Start MainControl             ##########//
+   //##########################################################################//
+  .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+    $scope.model = {
+      chips: ["Item1", "Item2"],
+      site: {
+        phone: "+49174406053684",
+        email: ""
+      },
+      set_sidebar: [
+         {  
+          "name": "Home",
+          "route": "dashboard",
+          "icon": "home",
+         },{
+          "name": "Check Login",
+          "route": "home",
+          "icon": "home",
+         },{
+          "name": "Log Out",
+          "route": "logout",
+          "icon": "cog",
+         }
+      ],
+      set_logout: [
+         {  
+          "name": "Home",
+          "route": "dashboard",
+          "icon": "home",
+         },{
+          "name": "Check Login",
+          "route": "home",
+          "icon": "home",
+         },{
+          "name": "Signup",
+          "route": "signup",
+          "icon": "cog",
+         },{
+          "name": "Login",
+          "route": "login",
+          "icon": "envelope",
+         }
+      ]
+    };
+     // Share button
+     $scope.ShareProduct = function(img, title, hreflink) { 
+       window.plugins.socialsharing.share('', title, img, hreflink); 
+     };
+    $scope.goToSite = function(site, $event) {
+      if(site == "logout"){
+                $rootScope.authenticated = false;
+          $rootScope.login = "";
+          $rootScope.uid = "";
+          $rootScope.lname = "";
+          $rootScope.fname = "";
+          $rootScope.email = "";
+          $http.get('http://11invoicing.com/demochat/control/log_logout.php').success(function(data) {
+            $location.path('hoame');
+              $('.button-collapse').sideNav('hide');
+          });
+        }else{
+          $location.path(site);
+          $('.button-collapse').sideNav('hide');
+      }
+    };
+    // QR Scanner
+    $scope.QRScan = function(){
+      cordova.plugins.barcodeScanner.scan(function(result) {
+        Materialize.toast(result.text, 4000);
+
+        /*
+        $http.post("control/check_qr_id.php",{'qrcode': result.text})
+        .success(function(data, status, headers, config){
+          console.log("inserted Successfully");
+          if (data.status == "ok") {
+            //$location.path('dashboard');
+            //alert(data.qr_id);
+              $scope.newLogin = {upline: data.qr_id, 
+                       upline_name: data.qr_name,
+                       upline_email: data.qr_email};
+            $http.post("control/check_upline.php",{'upline': data.qr_id})
+            .success(function(data, status, headers, config){
+              console.log("inserted Successfully");
+              if (data.status == "ok") {
+                $scope.uplinedetail = data;
+              }else{
+                $scope.uplinedetail = "";
+              }
+            });
+          }else{
+            //$location.path('login');
+            //$route.reload();
+            alert("扫描出错：没有此用户！");
+            $mdDialog.show(
+              $mdDialog.alert()
+              .clickOutsideToClose(true)
+              .title('Opening from the left')
+              .textContent('Closing to the right!')
+              .ariaLabel('Left to right demo')
+              .ok('Nice!')
+              // You can specify either sting with query selector
+              .openFrom('#left')
+              // or an element
+              .closeTo(angular.element(document.querySelector('#right')))
+            );
+            
+          }
+        });*/
+      }, function(error) {
+        alert("扫描出错: " + error);
+      }); 
+    };  
+    // QR Scanner
+    $scope.Vibrate = function(){
+
+      //navigator.vibrate(0);
+        Materialize.toast("Vibrate Click", 4000);
+    }; 
+  }]);
+   //##########################################################################//
+   //###############          End MainControl             ##########//
+   //##########################################################################//
+   //###############          Start register                ##########//
+   //##########################################################################//
+  .controller("RegisterController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+    $scope.ViewRegClick = function(){
+      alert($scope.reg.dob);
+    };  
+    $scope.RegClick = function(){
+      var data = {
+        username:$scope.reg.username,
+        password:$scope.reg.password,
+        displayname:$scope.reg.displayname,
+        gender:$scope.reg.gender,
+        dob:$scope.reg.dob,
+        email:$scope.reg.email,
+        phone:$scope.reg.phone
+      }
+      $http.post("http://11invoicing.com/demochat/control/log_reg.php",{'username': $scope.reg.username, 'password': $scope.reg.password, 'displayname': $scope.reg.displayname, 'gender': $scope.reg.gender, 'dob': $scope.reg.dob, 'email': $scope.reg.email, 'phone': $scope.reg.phone})
+      .success(function(data, status, headers, config){
+        console.log("inserted Successfully");
+        $scope.reg.username = "";
+        $scope.reg.password = "";
+        $scope.reg.displayname = "";
+        $scope.reg.gender = "";
+        $scope.reg.dob = "";
+        $scope.reg.email = "";
+        $scope.reg.phone = "";
+        if (data.status == "ok") {
+          Materialize.toast(data.message, 4000);
+          $location.path('home');
+        }else{
+          Materialize.toast(data.message, 4000);
+          $location.path('about_us');
+          //$route.reload();
+        }
+      });
+      $scope.reg = {
+        username:"",
+        password:"",
+        displayname:"",
+        gender:"",
+        dob:"",
+        email:"",
+        phone:""
+      };
+    }; 
+  }]);
+   //##########################################################################//
+   //###############          End register                ##########//
+   //##########################################################################//
+   //###############          Start Login                 ##########//
+   //##########################################################################//
+  .controller("LoginController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+    $scope.LoginClick = function(add){
+      var data = {
+        fname:$scope.newLogin.username,
+        lname:$scope.newLogin.password
+      }
+      $http.post("http://11invoicing.com/demochat/control/log_login.php",{'username': $scope.newLogin.username, 'password': $scope.newLogin.password})
+      .success(function(data, status, headers, config){
+        console.log("inserted Successfully");
+        $scope.newLogin.username = "";
+        $scope.newLogin.password = "";
+        if (data.status == "ok") {
+          Materialize.toast(data.message, 4000);
+          $location.path('home');
+        }else{
+          Materialize.toast(data.message, 4000);
+          $location.path('about_us');
+          //$route.reload();
+        }
+      });
+      $scope.newLogin = {
+        username:"",
+        password:""
+      };
+    };  
+  }]);
+   //##########################################################################//
+   //###############          End Login                 ##########//
+   //##########################################################################//
+   //###############          Start Dashboard             ##########//
+   //##########################################################################//
+  .controller("DashboardController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+    $scope.MessageSendClick = function(add){
+      var data = {
+        sendmsg:$scope.message.msg
+      }
+      $http.post("http://11invoicing.com/demochat/control/msg_push.php",{'message': $scope.message.msg})
+      .success(function(data, status, headers, config){
+        console.log("inserted Successfully");
+        $scope.message.msg = "";
+        if (data.status == "ok") {
+          //$location.path('home');
+        }else{
+          //$location.path('about_us');
+          //$route.reload();
+        }
+      });
+      $scope.message = {
+        msg:""
+      };
+    };  
+  }]);
+   //##########################################################################//
+   //###############          End Login                 ##########//
+   //##########################################################################//
   </script>
 
-  <!--AngularJS CDN-->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-</body>
+</head>
 
+<body ng-app="MyApp" ng-cloak>
+  <!-- your code start -->
+  <div class="app-main" ng-controller="mainController">
+
+    <nav>
+      <a href="#" class="brand-logo">Demo Chat</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li ng-repeat="data_set_sidebar in model.set_sidebar" ng-click="goToSite(data_set_sidebar.route, $event)" ng-if="login == 'True' && uid != ''"><a>{{data_set_sidebar.name}}</a></li>
+        <li ng-repeat="data_set_logout in model.set_logout" ng-click="goToSite(data_set_logout.route, $event)" ng-if="login != 'True'"><a>{{data_set_logout.name}}</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li style="height:50px"></li>
+        <li ng-repeat="data_set_sidebar in model.set_sidebar" ng-click="goToSite(data_set_sidebar.route, $event)" ng-if="login == 'True' && uid != ''"><a>{{data_set_sidebar.name}}</a></li>
+        <li ng-repeat="data_set_logout in model.set_logout" ng-click="goToSite(data_set_logout.route, $event)" ng-if="login != 'True'"><a>{{data_set_logout.name}}</a></li>
+      </ul>
+    </nav>
+
+    <div ng-view></div>
+    
+    <nav class="nav-extended" style="position: fixed; bottom: 0;">
+      <div class="nav-wrapper">
+        <ul class="tabs tabs-transparent">
+          <li class="tab"><a href="#test1">Test 1</a></li>
+          <li class="tab"><a class="active" href="#test2">Test 2</a></li>
+          <li class="tab"><a href="#test3">Test 3</a></li>
+          <li class="tab"><a href="#test4" onClick="Materialize.toast('I am a toast', 4000)">Test 4</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</body>
 </html>
