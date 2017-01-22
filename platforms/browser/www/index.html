@@ -96,11 +96,6 @@
 		        console.log('Received Device Ready Event');
 		        console.log('calling setup push');
 		        phoneapp.setupPush();
-		    	$('select').material_select();
-		    	$('.datepicker').pickadate({
-			      selectMonths: true, // Creates a dropdown to control month
-			      selectYears: 30 // Creates a dropdown of 15 years to control year
-			    });
 		    },
 		    //  Server API Key : AIzaSyAQQXWPh1HC4sILQjYimwHGyFZ65RuzktI
 		    //  Sender ID      : 347107514071
@@ -180,6 +175,11 @@
 	   //##########################################################################//
 	   //###############					Start Setting Var							##########//
 	   //##########################################################################//
+		    	$('select').material_select();
+		    	$('.datepicker').pickadate({
+			      selectMonths: true, // Creates a dropdown to control month
+			      selectYears: 30 // Creates a dropdown of 15 years to control year
+			    });
 		$scope.model = {
 			chips: ["Item1", "Item2"],
 			site: {
