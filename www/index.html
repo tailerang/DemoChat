@@ -18,10 +18,7 @@
   <script type="text/javascript" src="cordova.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/socialsharing.js"></script>
-  <title>Brilliant</title>  
-  <script type="text/javascript">
-
-  </script>  
+  <title>Demo Chat</title>   
   <script>
   var app = angular
   .module("MyApp", ["ngRoute"])
@@ -39,12 +36,15 @@
 			.when("/home", {
 				templateUrl : "view/home.html"
 			})
+			.when("/shop", {
+				templateUrl : "view/shop.html"
+			})
 			.when('/product/:orderId', {
 				  templateUrl: 'view/product.html',
 				  controller: 'productController'
 			})
 			.when("/signup", {
-				templateUrl : "view/register.html?v6"
+				templateUrl : "view/register.html?v7"
 			})
 			.otherwise({
 				redirectTo: '/dashboard'
@@ -55,23 +55,23 @@
             $rootScope.authenticated = false;
             $http.get('http://11invoicing.com/demochat/control/log_check.php').success(function (results) {
                 if (results.uid) {
-                    $rootScope.authenticated = true;
-					$rootScope.login 	  = results.login;
-					$rootScope.uid  	  = results.uid;
-					$rootScope.name  	  = results.name;
-					$rootScope.email 	  = results.email;
-					$rootScope.level 	  = results.level;
-					$rootScope.push_token = results.push_token;
+                  $rootScope.authenticated = true;
+						$rootScope.login 	  = results.login;
+						$rootScope.uid  	  = results.uid;
+						$rootScope.name  	  = results.name;
+						$rootScope.email 	  = results.email;
+						$rootScope.level 	  = results.level;
+						$rootScope.push_token = results.push_token;
                 } else {
-                    var nextUrl = next.$$route.originalPath;
-                    if (nextUrl == '/signup' || 
-						nextUrl == '/login' || 
-						nextUrl == '/dashboard' || 
-						nextUrl == '/product/:orderId' || 
-						nextUrl == '/about_us') {
-                    } else {
-                       // $location.path("/login");
-                    }
+                  var nextUrl = next.$$route.originalPath;
+                  if (nextUrl == '/signup' || 
+							 nextUrl == '/login' || 
+							 nextUrl == '/dashboard' || 
+							 nextUrl == '/product/:orderId' || 
+							 nextUrl == '/about_us') {
+                  } else {
+                      $location.path("/login");
+                  }
                 }
             });
         });
@@ -96,12 +96,16 @@
 		        console.log('Received Device Ready Event');
 		        console.log('calling setup push');
 		        phoneapp.setupPush();
+		    	$('select').material_select();
+		    	$('.datepicker').pickadate({
+			      selectMonths: true, // Creates a dropdown to control month
+			      selectYears: 30 // Creates a dropdown of 15 years to control year
+			    });
 		    },
 		    //  Server API Key : AIzaSyAQQXWPh1HC4sILQjYimwHGyFZ65RuzktI
 		    //  Sender ID      : 347107514071
 		    setupPush: function() {
 		        console.log('calling push init');
-    			console.log(navigator.vibrate);
 		        var push = PushNotification.init({
 		            "android": {
 		                "senderID": "347107514071"
@@ -151,8 +155,8 @@
 
 		        push.on('notification', function(data) {
 		            console.log('notification event');
-		           // document.getElementById("gcm_msg").value = JSON.stringify(data);
-		           Materialize.toast(data.message, 4000);
+		            // document.getElementById("gcm_msg").value = JSON.stringify(data);
+		            Materialize.toast(data.message, 4000);
 		           /*
 		            navigator.notification.alert(
 		                data.message,         // message
@@ -172,110 +176,72 @@
         return $sce.trustAsHtml(val);
     };
   })
-  .controller('DashboardController', function ($scope, $http, $routeParams, $location, $route){
-		$scope.MessageSendClick = function(add){
-			var data = {
-				sendmsg:$scope.message.msg
+  .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
+	   //##########################################################################//
+	   //###############					Start Setting Var							##########//
+	   //##########################################################################//
+		$scope.model = {
+			chips: ["Item1", "Item2"],
+			site: {
+			  phone: "+49174406053684",
+			  email: ""
+			},
+			set_sidebar: [
+			   {  
+					"name": "Home",
+					"route": "dashboard",
+					"icon": "home",
+			   },{
+					"name": "Check Login",
+					"route": "home",
+					"icon": "home",
+			   },{
+					"name": "Log Out",
+					"route": "logout",
+					"icon": "cog",
+			   }
+			],
+			set_logout: [
+			   {  
+				 	"name": "Home",
+					"route": "dashboard",
+					"icon": "home",
+			   },{
+					"name": "Check Login",
+					"route": "home",
+					"icon": "home",
+			   },{
+					"name": "Signup",
+					"route": "signup",
+					"icon": "cog",
+			   },{
+					"name": "Login",
+					"route": "login",
+					"icon": "envelope",
+			   }
+			]
+		};
+	   // Share button
+	   $scope.ShareProduct = function(img, title, hreflink) { 
+	     window.plugins.socialsharing.share('', title, img, hreflink); 
+	   };
+		$scope.goToSite = function(site, $event) {
+			if(site == "logout"){
+	              $rootScope.authenticated = false;
+				  $rootScope.login = "";
+				  $rootScope.uid = "";
+				  $rootScope.lname = "";
+				  $rootScope.fname = "";
+				  $rootScope.email = "";
+				  $http.get('http://11invoicing.com/demochat/control/log_logout.php').success(function(data) {
+					  $location.path('hoame');
+	  				  $('.button-collapse').sideNav('hide');
+				  });
+			  }else{
+				  $location.path(site);
+	 			  $('.button-collapse').sideNav('hide');
 			}
-			$http.post("http://11invoicing.com/demochat/control/msg_push.php",{'message': $scope.message.msg})
-			.success(function(data, status, headers, config){
-				console.log("inserted Successfully");
-				$scope.message.msg = "";
-				if (data.status == "ok") {
-					//$location.path('home');
-				}else{
-					//$location.path('about_us');
-					//$route.reload();
-				}
-			});
-			$scope.message = {
-				msg:""
-			};
-		};     		
-	  
-  })
-  .controller('RegisterController',function ($scope, $http, $routeParams, $location, $route){
-	    $('.datepicker').pickadate({
-	      selectMonths: true, // Creates a dropdown to control month
-	      selectYears: 15 // Creates a dropdown of 15 years to control year
-	    });
-	    $(document).ready(function() {
-	      $('select').material_select();
-	    });
-		$scope.ViewRegClick = function(){
-			alert($scope.reg.gender);
-		};  
-		$scope.RegClick = function(){
-			var data = {
-				username:$scope.reg.username,
-				password:$scope.reg.password,
-				displayname:$scope.reg.displayname,
-				gender:$scope.reg.gender,
-				dob:$scope.reg.dob,
-				email:$scope.reg.email,
-				phone:$scope.reg.phone
-			}
-			$http.post("http://11invoicing.com/demochat/control/log_reg.php",{'username': $scope.reg.username, 'password': $scope.reg.password, 'displayname': $scope.reg.displayname, 'gender': $scope.reg.gender, 'dob': $scope.reg.dob, 'email': $scope.reg.email, 'phone': $scope.reg.phone})
-			.success(function(data, status, headers, config){
-				console.log("inserted Successfully");
-				$scope.reg.username = "";
-				$scope.reg.password = "";
-				$scope.reg.displayname = "";
-				$scope.reg.gender = "";
-				$scope.reg.dob = "";
-				$scope.reg.email = "";
-				$scope.reg.phone = "";
-				if (data.status == "ok") {
-					Materialize.toast(data.message, 4000);
-					$location.path('home');
-				}else{
-					Materialize.toast(data.message, 4000);
-					$location.path('about_us');
-					//$route.reload();
-				}
-			});
-			$scope.reg = {
-				username:"",
-				password:"",
-				displayname:"",
-				gender:"",
-				dob:"",
-				email:"",
-				phone:""
-			};
-		};   
-  })
-  .controller('LoginController',function ($scope, $http, $routeParams, $location, $route){
-		$scope.LoginClick = function(add){
-			var data = {
-				fname:$scope.newLogin.username,
-				lname:$scope.newLogin.password
-			}
-			$http.post("http://11invoicing.com/demochat/control/log_login.php",{'username': $scope.newLogin.username, 'password': $scope.newLogin.password})
-			.success(function(data, status, headers, config){
-				console.log("inserted Successfully");
-				$scope.newLogin.username = "";
-				$scope.newLogin.password = "";
-				if (data.status == "ok") {
-					Materialize.toast(data.message, 4000);
-					$location.path('home');
-				}else{
-					Materialize.toast(data.message, 4000);
-					$location.path('about_us');
-					//$route.reload();
-				}
-			});
-			$scope.newLogin = {
-				username:"",
-				password:""
-			};
-		};   
-
-	    // Share button
-	    $scope.ShareProduct = function(img, title, hreflink) { 
-	      window.plugins.socialsharing.share('', title, img, hreflink); 
-	    };
-
+		};
 		// QR Scanner
 		$scope.QRScan = function(){
 			cordova.plugins.barcodeScanner.scan(function(result) {
@@ -326,86 +292,123 @@
 		// QR Scanner
 		$scope.Vibrate = function(){
 
+			//navigator.vibrate(0);
 				Materialize.toast("Vibrate Click", 4000);
-			navigator.vibrate(0);
-			navigator.notification.vibrate(0);
+		}; 
+	   //##########################################################################//
+	   //###############					End Setting Var							##########//
+	   //##########################################################################//
+	   //###############					Start register								##########//
+	   //##########################################################################//
+		$scope.ViewRegClick = function(){
+			alert($scope.reg.dob);
 		};  
+		$scope.RegClick = function(){
+			var data = {
+				username:$scope.reg.username,
+				password:$scope.reg.password,
+				displayname:$scope.reg.displayname,
+				gender:$scope.reg.gender,
+				dob:$scope.reg.dob,
+				email:$scope.reg.email,
+				phone:$scope.reg.phone
+			}
+			$http.post("http://11invoicing.com/demochat/control/log_reg.php",{'username': $scope.reg.username, 'password': $scope.reg.password, 'displayname': $scope.reg.displayname, 'gender': $scope.reg.gender, 'dob': $scope.reg.dob, 'email': $scope.reg.email, 'phone': $scope.reg.phone})
+			.success(function(data, status, headers, config){
+				console.log("inserted Successfully");
+				$scope.reg.username = "";
+				$scope.reg.password = "";
+				$scope.reg.displayname = "";
+				$scope.reg.gender = "";
+				$scope.reg.dob = "";
+				$scope.reg.email = "";
+				$scope.reg.phone = "";
+				if (data.status == "ok") {
+					Materialize.toast(data.message, 4000);
+					$location.path('home');
+				}else{
+					Materialize.toast(data.message, 4000);
+					$location.path('about_us');
+					//$route.reload();
+				}
+			});
+			$scope.reg = {
+				username:"",
+				password:"",
+				displayname:"",
+				gender:"",
+				dob:"",
+				email:"",
+				phone:""
+			};
+		}; 
+	   //##########################################################################//
+	   //###############					End register								##########//
+	   //##########################################################################//
+	   //###############					Start Login									##########//
+	   //##########################################################################//
+		$scope.LoginClick = function(add){
+			var data = {
+				fname:$scope.newLogin.username,
+				lname:$scope.newLogin.password
+			}
+			$http.post("http://11invoicing.com/demochat/control/log_login.php",{'username': $scope.newLogin.username, 'password': $scope.newLogin.password})
+			.success(function(data, status, headers, config){
+				console.log("inserted Successfully");
+				$scope.newLogin.username = "";
+				$scope.newLogin.password = "";
+				if (data.status == "ok") {
+					Materialize.toast(data.message, 4000);
+					$location.path('home');
+				}else{
+					Materialize.toast(data.message, 4000);
+					$location.path('about_us');
+					//$route.reload();
+				}
+			});
+			$scope.newLogin = {
+				username:"",
+				password:""
+			};
+		};  
+	   //##########################################################################//
+	   //###############					End Login									##########//
+	   //##########################################################################//
+	   //###############					Start Dashboard							##########//
+	   //##########################################################################//
+		$scope.MessageSendClick = function(add){
+			var data = {
+				sendmsg:$scope.message.msg
+			}
+			$http.post("http://11invoicing.com/demochat/control/msg_push.php",{'message': $scope.message.msg})
+			.success(function(data, status, headers, config){
+				console.log("inserted Successfully");
+				$scope.message.msg = "";
+				if (data.status == "ok") {
+					//$location.path('home');
+				}else{
+					//$location.path('about_us');
+					//$route.reload();
+				}
+			});
+			$scope.message = {
+				msg:""
+			};
+		};  
+	   //##########################################################################//
+	   //###############					End Dashboard								##########//
+	   //##########################################################################//
 
 
-
-  })
-  .controller("mainController", ["$scope", "$routeParams", "$location", "$route", "$http", "$rootScope", "$timeout", function($scope, $routeParams, $location, $route, $http, $rootScope, $timeout){
-
-	  $scope.state = {
-		socialShareIsOpen: false
-	  };
-	  
-	  $scope.model = {
-		chips: ["Item1", "Item2"],
-		site: {
-		  phone: "+49174406053684",
-		  email: ""
-		},
-		set_sidebar: [
-		  {  
-				"name": "Home",
-				"route": "dashboard",
-				"icon": "home",
-		  },{
-				"name": "Check Login",
-				"route": "home",
-				"icon": "home",
-		  },{
-				"name": "Log Out",
-				"route": "logout",
-				"icon": "cog",
-		  }
-		],
-		set_logout: [
-		  {  
-				"name": "Home",
-				"route": "dashboard",
-				"icon": "home",
-		  },{
-				"name": "Check Login",
-				"route": "home",
-				"icon": "home",
-		  },{
-				"name": "Signup",
-				"route": "signup",
-				"icon": "cog",
-		  },{
-				"name": "Login",
-				"route": "login",
-				"icon": "envelope",
-		  }
-		]
-	  };
-	  	  
-	  $scope.goToSite = function(site, $event) {
-		  if(site == "logout"){
-              $rootScope.authenticated = false;
-			  $rootScope.login = "";
-			  $rootScope.uid = "";
-			  $rootScope.lname = "";
-			  $rootScope.fname = "";
-			  $rootScope.email = "";
-			  $http.get('http://11invoicing.com/demochat/control/log_logout.php').success(function(data) {
-				  $location.path('hoame');
-  				  $('.button-collapse').sideNav('hide');
-			  });
-		  }else{
-			  $location.path(site);
- 			  $('.button-collapse').sideNav('hide');
-		  }
-	  };
   }]);
   </script>
 
 </head>
 
 <body ng-app="MyApp" ng-cloak>
+  <!-- your code start -->
   <div class="app-main" ng-controller="mainController">
+
     <nav>
       <a href="#" class="brand-logo">Demo Chat</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>

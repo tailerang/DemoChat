@@ -1,0 +1,76 @@
+<div style="width:100%" ng-controller="ShopController">
+
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+      <!--
+        `shop_name` varchar(100) NOT NULL,
+        `shop_reg_no` varchar(100) DEFAULT NULL,
+        `shop_gst_no` varchar(100) DEFAULT NULL,
+        `shop_desc` text,
+        `shop_website` varchar(100) DEFAULT NULL,
+        `shop_email` varchar(100) DEFAULT NULL,
+        `shop_tel` varchar(100) DEFAULT NULL,
+        `shop_mobile` varchar(100) DEFAULT NULL,
+        `shop_address` text,
+        `shop_postcode` varchar(100) DEFAULT NULL,
+        `shop_city` varchar(100) DEFAULT NULL,
+        `shop_state` varchar(100) DEFAULT NULL,
+        `shop_country` varchar(100) DEFAULT NULL,
+      -->
+        <div class="input-field col s12">
+          <span style="font-size: x-large;">Shop Detail</span>
+        </div>
+        <div class="input-field col s12">
+          <div class="input-field col s6">
+            <input id="shop_name" type="text" class="validate" ng-model="shop.shop_name">
+            <label for="shop_name">Shop Name</label>
+          </div>
+        </div>
+        <div class="input-field col s6">
+          <input id="shop_reg_no" type="text" class="validate" ng-model="shop.shop_reg_no">
+          <label for="shop_reg_no">Company Register No.</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="shop_gst_no" type="text" class="validate" ng-model="shop.shop_gst_no">
+          <label for="shop_gst_no">Company GST No.</label>
+        </div>
+        <div class="input-field col s12">
+          <textarea placeholder="Description" class="materialize-textarea" ng-model="shop.shop_desc"></textarea>
+          <label for="shop_name">Shop Description</label>
+        </div>
+        <div class="input-field col s12 ">
+          <!--select  onChange="$scope.reg.gender = this.value;">
+            <option value="m">Gent</option>
+            <option value="f">Ladies</option>
+          </select-->
+          <input name="group1" ng-model="reg.gender" type="radio" id="test1" value="m" />
+          <label for="test1">Gent</label>&nbsp;&nbsp;&nbsp;
+          <input name="group1" ng-model="reg.gender" type="radio" id="test2" value="f" />
+          <label for="test2">Ladies</label>
+          <br><br>
+        </div>
+        <div class="input-field col s12">
+          <input type="date" class="datepicker" ng-model="reg.dob">
+          <label for="password">D.O.B</label>
+        </div>
+        <div class="input-field col s12">
+          <input type="email" class="validate" ng-model="reg.email">
+          <label for="email" data-error="wrong" data-success="right">Email</label>
+        </div>
+        <div class="input-field col s12">
+          <input type="tel" class="validate" ng-model="reg.phone">
+          <label for="icon_telephone">Contact</label>
+        </div>
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light" data-ng-click="RegClick()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+          </button>
+          <button class="btn waves-effect waves-light" data-ng-click="ViewRegClick()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> View
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> <!-- /container -->
