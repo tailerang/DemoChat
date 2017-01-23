@@ -11,16 +11,27 @@
             <div class="card-image waves-effect waves-block waves-light">
               <img class="activator" src="http://www.um.es/docencia/barzana/materializecss/images/sample-1.jpg">
             </div>
-            <div class="card-content">
-              <span class="card-title activator grey-text text-darken-4">{{data_prodlist.prod_name}}<i class="material-icons right">more_vert</i></span>
+            <div class="card-content" style="padding: 5%; min-height: 60px; ">
+              <span class="card-title activator grey-text text-darken-4" style="font-size: 14px; line-height: 14px; ">{{data_prodlist.prod_name}}<i class="material-icons right" style="font-size: 14px;">more_vert</i>
+              <i class="fa fa-wrench right grey-text" aria-hidden="true" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)"></i></span>
+              <div style="margin-top: 15px;">
+              <i class="fa fa-shopping-cart right grey-text" aria-hidden="true" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)"></i>
+              <i class="fa fa-thumbs-up right grey-text" aria-hidden="true"> 99</i>
+              <i class="fa fa-heart right grey-text" aria-hidden="true"> 88</i>
+              </div>
             </div>
-            <div class="card-reveal">
-              <span class="card-title grey-text text-darken-4">{{data_prodlist.prod_name}}<i class="material-icons right">close</i></span>
+            <div class="card-reveal" style="padding: 5%;">
+              <span class="card-title activator grey-text text-darken-4" style="font-size: 14px; line-height: 14px; ">{{data_prodlist.prod_name}}<i class="material-icons right" style="font-size: 14px;">close</i>
+              <i class="fa fa-wrench right grey-text" aria-hidden="true" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)"></i></span>
+              <div  style="margin-top: 15px;">
+              <i class="fa fa-shopping-cart right grey-text" aria-hidden="true" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)"></i>
+              <i class="fa fa-thumbs-up right grey-text" aria-hidden="true"> 99</i>
+              <i class="fa fa-heart right grey-text" aria-hidden="true"> 88</i>
+              </div>
+              <br>
               <p ng-if="data_prodlist.prod_desc">{{data_prodlist.prod_desc}}</p>
               <p ng-if="data_prodlist.prod_content">{{data_prodlist.prod_content}}</p>
-              <button class="btn waves-effect waves-light" ng-click="goToSite('prod/'+data_prodlist.prod_id, $event)">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart
-              </button>
+
             </div>
           </div>
         </div>
